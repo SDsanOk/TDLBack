@@ -16,16 +16,11 @@ namespace simpleApp.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly IRoleStore<ApplicationRole> _roleStore;
-        private readonly IUserStore<ApplicationUser> _userStore;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public UsersController(IRoleStore<ApplicationRole> roleStore, IUserStore<ApplicationUser> userStore, UserManager<ApplicationUser> userManager,
-        SignInManager<ApplicationUser> signInManager)
+        public UsersController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
-            _roleStore = roleStore;
-            _userStore = userStore;
             _userManager = userManager;
             _signInManager = signInManager;
         }
@@ -76,7 +71,8 @@ namespace simpleApp.Controllers
         [HttpGet("{id}", Name = "GetUser")]
         public string Get(int id)
         {
-            return "value";
+            //_userManager.GetUserId(User);
+            return "";
         }
 
         // POST: api/Users

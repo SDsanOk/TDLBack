@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using simpleApp.Data;
 using simpleApp.Models;
+using Swashbuckle.AspNetCore.Swagger;
 
 
 namespace simpleApp
@@ -30,13 +31,37 @@ namespace simpleApp
 
             services.AddTransient<IRoleStore<ApplicationRole>, RoleStore>();
             services.AddTransient<IUserStore<ApplicationUser>, UserStore>();
+            services.AddScoped<IStore<TDList>, TDListStore>();
 
             services.AddIdentity<ApplicationUser, ApplicationRole>()
                 .AddDefaultTokenProviders();
 
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v0.01", new Info { Title = "TODOListBackend", Version = "v0.01" });
+            });
+
             services.AddAuthentication();
 
             services.ConfigureApplicationCookie(options => options.LoginPath = "/swagger");
+
+            //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            //    .AddJwtBearer(options =>
+            //    {
+            //        options.RequireHttpsMetadata = false;
+            //        options.TokenValidationParameters = new TokenValidationParameters
+            //        {
+            //            ValidateIssuer = true,
+            //            ValidIssuer = "Al Panam",
+
+            //            ValidateAudience = true,
+            //            ValidAudience = "Common User",
+            //            ValidateLifetime = true,
+
+            //            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("salttestbearerJWTTokensbla-bla-bla")),
+            //            ValidateIssuerSigningKey = true,
+            //        };
+            //    });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -53,6 +78,14 @@ namespace simpleApp
             }
 
             app.UseAuthentication();
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v0.01/swagger.json", "TODO");
+                
+            });
 
             app.UseHttpsRedirection();
             app.UseMvc(routes =>
