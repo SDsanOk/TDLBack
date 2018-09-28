@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using simpleApp.Data;
+using simpleApp.Data.Stores;
 using simpleApp.Models;
 using Swashbuckle.AspNetCore.Swagger;
 
@@ -32,13 +33,14 @@ namespace simpleApp
             services.AddTransient<IRoleStore<ApplicationRole>, RoleStore>();
             services.AddTransient<IUserStore<ApplicationUser>, UserStore>();
             services.AddScoped<IStore<TDList>, TDListStore>();
+            services.AddScoped<IStore<TDEvent>, TDEventStore>();
 
             services.AddIdentity<ApplicationUser, ApplicationRole>()
                 .AddDefaultTokenProviders();
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v0.01", new Info { Title = "TODOListBackend", Version = "v0.01" });
+                c.SwaggerDoc("v0.2", new Info { Title = "TODOListBackend", Version = "v0.2" });
             });
 
             services.AddAuthentication();
@@ -83,7 +85,7 @@ namespace simpleApp
 
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v0.01/swagger.json", "TODO");
+                c.SwaggerEndpoint("/swagger/v0.2/swagger.json", "TODO");
                 
             });
 

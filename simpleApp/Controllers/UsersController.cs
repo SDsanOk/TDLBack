@@ -18,21 +18,23 @@ namespace simpleApp.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IStore<TDList> _tdListStore;
 
-        public UsersController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public UsersController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IStore<TDList> tdListStore)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _tdListStore = tdListStore;
         }
 
-        // GET: api/Users
-        [HttpGet]
-        [Authorize]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-        //sdelat` OAuth
+        //// GET: api/Users
+        //[HttpGet]
+        //public IEnumerable<string> Get()
+        //{
+        //    return new string[] { "value1", "value2" };
+        //}
+
+        //todo:sdelat` OAuth
         [HttpGet("login",Name = "login")]
         public async Task<SignInResult> Login(string email, string  password)
         {
@@ -67,31 +69,30 @@ namespace simpleApp.Controllers
             return null;
         }
 
-        // GET: api/Users/5
-        [HttpGet("{id}", Name = "GetUser")]
-        public string Get(int id)
+        [Authorize]
+        [HttpGet("lists", Name = "getlists")]
+        public IEnumerable<TDList> Get()
         {
-            //_userManager.GetUserId(User);
-            return "";
+            return _tdListStore.GetListByUserId(int.Parse(_userManager.GetUserId(User)));
         }
 
-        // POST: api/Users
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
+        //// POST: api/Users
+        //[HttpPost]
+        //public void Post([FromBody] string value)
+        //{
+        //}
 
-        // PUT: api/Users/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
+        //// PUT: api/Users/5
+        //[HttpPut("{id}")]
+        //public void Put(int id, [FromBody] string value)
+        //{
+        //}
 
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+        //// DELETE: api/ApiWithActions/5
+        //[HttpDelete("{id}")]
+        //public void Delete(int id)
+        //{
+        //}
 
     }
 }

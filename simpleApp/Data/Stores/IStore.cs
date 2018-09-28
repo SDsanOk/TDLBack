@@ -8,8 +8,10 @@ namespace simpleApp.Data
 {
     public interface IStore<T>
     {
-        void Add(T entity, int? userId);
+        void Add(T entity, int id);
         T Get(int id);
         void Delete(int id);
+        void Update(T entity);
+        IEnumerable<T> GetListByUserId(int id);
     }
 }
