@@ -22,12 +22,12 @@ namespace CloudCall.Todo.Services.Stores
         }
 
 
-        public void Add(Board entity, int userId)
+        public int Add(Board entity, int userId)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 int boardId = connection.Insert(entity).Value;
-                connection.Insert(new ApplicationUserBoard {BoardId = boardId, ApplicationUserId = userId});
+                return connection.Insert(new ApplicationUserBoard {BoardId = boardId, ApplicationUserId = userId}).Value;
             }
         }
 

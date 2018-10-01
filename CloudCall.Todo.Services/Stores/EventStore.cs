@@ -19,13 +19,13 @@ namespace CloudCall.Todo.Services.Stores
             _connectionString = configuration.GetConnectionString("DefaultConnection");
         }
 
-        public void Add(Event entity, int listId)
+        public int Add(Event entity, int listId)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 entity.ListId = listId;
                 int idEvent = connection.Insert(entity).Value;
-                connection.Insert(new ListEvent {EventId = idEvent, ListId = listId});
+                return connection.Insert(new ListEvent {EventId = idEvent, ListId = listId}).Value;
             }
         }
 

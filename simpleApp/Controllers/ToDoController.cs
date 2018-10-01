@@ -12,12 +12,14 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using CloudCall.Todo.Services;
+using Microsoft.AspNetCore.Cors;
 
 namespace simpleApp.Controllers
 {
     [Route("api/todo")]
     [Authorize]
     [ApiController]
+    [EnableCors("all")]
     public class ToDoController : ControllerBase
     {
         private readonly string _connectionString;
@@ -52,9 +54,9 @@ namespace simpleApp.Controllers
 
         // POST: api/todo/board
         [HttpPost("board/")]
-        public void PostBoard([Required, FromBody] Board value)
+        public int PostBoard([Required, FromBody] Board value)
         {
-            _boardStore.Add(value, int.Parse(_userManager.GetUserId(User)));
+            return _boardStore.Add(value, int.Parse(_userManager.GetUserId(User)));
         }
 
         // PUT: api/todo/board/
@@ -88,9 +90,9 @@ namespace simpleApp.Controllers
 
         // POST: api/todo/list
         [HttpPost("list/")]
-        public void Post(int boardId,[Required, FromBody] List value)
+        public int Post(int boardId,[Required, FromBody] List value)
         {     
-            _listStore.Add(value, boardId);
+           return _listStore.Add(value, boardId);
         }
 
         // PUT: api/todo/list/
@@ -115,9 +117,9 @@ namespace simpleApp.Controllers
         }
 
         [HttpPost("event/{listId}")]
-        public void PostEvent([Required]int listId, [Required, FromBody] Event value)
+        public int PostEvent([Required]int listId, [Required, FromBody] Event value)
         {
-            _eventStore.Add(value, listId);
+            return _eventStore.Add(value, listId);
         }
 
         [HttpDelete("event/{id}")]

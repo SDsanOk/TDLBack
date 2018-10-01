@@ -10,12 +10,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using CloudCall.Todo.Services;
+using Microsoft.AspNetCore.Cors;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace simpleApp.Controllers
 {
     [Route("api/users")]
     [ApiController]
+    [EnableCors("all")]
     public class UsersController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager;

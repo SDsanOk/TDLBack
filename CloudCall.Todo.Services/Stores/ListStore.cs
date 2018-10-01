@@ -24,7 +24,7 @@ namespace CloudCall.Todo.Services
             _logger = logger;
         }
 
-        public void Add(List entity, int boardId)
+        public int Add(List entity, int boardId)
         {
             try
             {
@@ -32,7 +32,7 @@ namespace CloudCall.Todo.Services
                 {
                     entity.BoardId = boardId;
                     int listId = connection.Insert(entity).Value;
-                    connection.Insert(new BoardList {BoardId = boardId, ListId = listId});
+                    return connection.Insert(new BoardList {BoardId = boardId, ListId = listId}).Value;
                 }
             }
             catch (Exception e)

@@ -38,7 +38,12 @@ namespace simpleApp
             services.AddScoped<IStore<Event>, EventStore>();
             services.AddScoped<IStore<Board>, BoardStore>();
 
-            services.AddCors();
+            services.AddCors(options => options.AddPolicy("all", builder =>
+            {
+                builder.AllowAnyOrigin();
+                builder.AllowAnyMethod();
+                builder.WithHeaders("Todo-Task-Header");
+            }));
 
             services.AddIdentity<ApplicationUser, ApplicationRole>()
                 .AddDefaultTokenProviders();
