@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using CloudCall.Todo.DAL;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -8,9 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using simpleApp.Data;
-using simpleApp.Data.Stores;
-using simpleApp.Models;
+using CloudCall.Todo.Services;
+using CloudCall.Todo.Services.Stores;
 using Swashbuckle.AspNetCore.Swagger;
 
 

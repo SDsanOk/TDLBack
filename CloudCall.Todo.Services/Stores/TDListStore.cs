@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using CloudCall.Todo.DAL;
 using Dapper;
 using Microsoft.Extensions.Configuration;
-using simpleApp.Models;
 
-namespace simpleApp.Data
+
+namespace CloudCall.Todo.Services
 {
     public class TDListStore : IStore<TDList>
     {

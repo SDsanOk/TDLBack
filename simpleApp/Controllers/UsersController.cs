@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CloudCall.Todo.DAL;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using simpleApp.Data;
-using simpleApp.Models;
+using CloudCall.Todo.Services;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace simpleApp.Controllers

@@ -3,7 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2026
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "simpleApp", "simpleApp\simpleApp.csproj", "{B0A157C7-9BE5-4E9A-A0A8-DBA4B4058B1F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CloudCall.Todo", "simpleApp\CloudCall.Todo.csproj", "{B0A157C7-9BE5-4E9A-A0A8-DBA4B4058B1F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudCall.Todo.Services", "CloudCall.Todo.Services\CloudCall.Todo.Services.csproj", "{B4CCF302-77CA-4A4E-B8EC-0316E6D4372B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudCall.Todo.DAL", "CloudCall.Todo.DAL\CloudCall.Todo.DAL.csproj", "{E1EAAD13-D823-495F-9648-C5A3BDA58536}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudCall.Todo.Tests", "CloudCall.Todo.Tests\CloudCall.Todo.Tests.csproj", "{27D43F52-5432-4429-A31F-9D2A26F7EC51}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +21,18 @@ Global
 		{B0A157C7-9BE5-4E9A-A0A8-DBA4B4058B1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B0A157C7-9BE5-4E9A-A0A8-DBA4B4058B1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B0A157C7-9BE5-4E9A-A0A8-DBA4B4058B1F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4CCF302-77CA-4A4E-B8EC-0316E6D4372B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4CCF302-77CA-4A4E-B8EC-0316E6D4372B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4CCF302-77CA-4A4E-B8EC-0316E6D4372B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4CCF302-77CA-4A4E-B8EC-0316E6D4372B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1EAAD13-D823-495F-9648-C5A3BDA58536}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1EAAD13-D823-495F-9648-C5A3BDA58536}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1EAAD13-D823-495F-9648-C5A3BDA58536}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1EAAD13-D823-495F-9648-C5A3BDA58536}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27D43F52-5432-4429-A31F-9D2A26F7EC51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27D43F52-5432-4429-A31F-9D2A26F7EC51}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27D43F52-5432-4429-A31F-9D2A26F7EC51}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27D43F52-5432-4429-A31F-9D2A26F7EC51}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

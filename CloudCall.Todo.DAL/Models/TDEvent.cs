@@ -1,22 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using Dapper;
 using System.Linq;
 using System.Threading.Tasks;
-using Dapper;
 
-namespace simpleApp.Models
+namespace CloudCall.Todo.DAL
 {
-    public class TDList
+    public class TDEvent
     {
-        public TDList()
-        {
-            Events = new List<TDEvent>();
-        }
-
         [Key]
         public int Id { get; set; }
         [Required]
         public string Title { get; set; }
-        public  List<TDEvent> Events { get; set; }
+        public bool Done { get; set; } = false;
     }
 }

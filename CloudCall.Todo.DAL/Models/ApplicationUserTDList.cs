@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 
-namespace simpleApp.Data
+namespace CloudCall.Todo.DAL
 {
     public class ApplicationUserTDList
     {
