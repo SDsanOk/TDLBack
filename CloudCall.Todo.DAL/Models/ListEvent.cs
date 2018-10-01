@@ -6,13 +6,13 @@ using Dapper;
 
 namespace CloudCall.Todo.DAL
 {
-    public class ApplicationUserTDList
+    public class ListEvent
     {
         [Key]
         public int Id { get; set; }
         [Required]
-        public int ApplicationUserId { get; set; }
+        public int ListId { get; set; }
         [Required]
-        public int TDListId { get; set; }
+        public int EventId { get; set; }
     }
 }

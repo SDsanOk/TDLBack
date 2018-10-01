@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using CloudCall.Todo.DAL;
-using Dapper;
+using CloudCall.Todo.DAL.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -20,64 +21,115 @@ namespace simpleApp.Controllers
     public class ToDoController : ControllerBase
     {
         private readonly string _connectionString;
-        private readonly IStore<TDList> _tdListStore;
-        private readonly IStore<TDEvent> _tdEventStore;
+        private readonly IStore<List> _listStore;
+        private readonly IStore<Event> _eventStore;
+        private readonly IStore<Board> _boardStore;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public ToDoController(IConfiguration configuration, IStore<TDList> tdListStore, UserManager<ApplicationUser> userManager, IStore<TDEvent> tdEventStore)
+        public ToDoController(IConfiguration configuration, IStore<List> listStore, UserManager<ApplicationUser> userManager, IStore<Event> eventStore, IStore<Board> boardStore)
         {
             _connectionString = configuration.GetConnectionString("DefaultConnection");
-            _tdListStore = tdListStore;
-            _tdEventStore = tdEventStore;
+            _listStore = listStore;
+            _eventStore = eventStore;
+            _boardStore = boardStore;
             _userManager = userManager;
         }
 
-        // GET: api/todo/list/5
-        [HttpGet("list/{id}", Name = "GetToDoList")]
-        public TDList Get(int id)
+        //boards
+        // GET: api/todo/board/5
+        [HttpGet("board/{boardId}")]
+        public Board GetBoard([Required] int boardId)
         {
-            return _tdListStore.Get(id);
+            return _boardStore.Get(boardId);
+        }
+
+        // GET: api/todo/board/
+        [HttpGet("boards/")]
+        public IEnumerable<Board> GetBoardList()
+        {
+            return _boardStore.GetList(int.Parse(_userManager.GetUserId(User)));
+        }
+
+        // POST: api/todo/board
+        [HttpPost("board/")]
+        public void PostBoard([Required, FromBody] Board value)
+        {
+            _boardStore.Add(value, int.Parse(_userManager.GetUserId(User)));
+        }
+
+        // PUT: api/todo/board/
+        [HttpPut("board/")]
+        public void PutBoard([Required, FromBody] Board value)
+        {
+            _boardStore.Update(value);
+        }
+
+        // DELETE: api/todo/board/5
+        [HttpDelete("board/{boardId}")]
+        public void DeleteBoard([Required] int boardId)
+        {
+            _boardStore.Delete(boardId);
+        }
+
+        //lists
+        // GET: api/todo/list/5
+        [HttpGet("list/{listId}")]
+        public List Get([Required] int listId)
+        {
+            return _listStore.Get(listId);
+        }
+
+        // GET: api/todo/list/5
+        [HttpGet("list/{boardId}")]
+        public IEnumerable<List> GetListList([Required] int boardId)
+        {
+            return _listStore.GetFullList(boardId);
         }
 
         // POST: api/todo/list
         [HttpPost("list/")]
-        public void Post([FromBody] TDList value)
+        public void Post(int boardId,[Required, FromBody] List value)
         {     
-            _tdListStore.Add(value, int.Parse(_userManager.GetUserId(User)));
+            _listStore.Add(value, boardId);
         }
 
         // PUT: api/todo/list/
         [HttpPut("list/")]
-        public void Put([FromBody] TDList value)
+        public void Put([Required, FromBody] List value)
         {
-            _tdListStore.Update(value);
+            _listStore.Update(value);
         }
 
         // DELETE: api/todo/list/5
-        [HttpDelete("list/{id}")]
-        public void Delete(int id)
+        [HttpDelete("list/{listId}")]
+        public void Delete([Required] int listId)
         {
-            _tdListStore.Delete(id);
+            _listStore.Delete(listId);
         }
 
         //events
-
-        [HttpPost("event/{id}")]
-        public void PostEvent(int id, [FromBody] TDEvent value)
+        [HttpGet("events/{listId}")]
+        public IEnumerable<Event> GetEvent([Required]int listId)
         {
-            _tdEventStore.Add(value, id);
+            return _eventStore.GetList(listId);
+        }
+
+        [HttpPost("event/{listId}")]
+        public void PostEvent([Required]int listId, [Required, FromBody] Event value)
+        {
+            _eventStore.Add(value, listId);
         }
 
         [HttpDelete("event/{id}")]
-        public void DeleteEvent(int id)
+        public void DeleteEvent([Required] int id)
         {
-            _tdEventStore.Delete(id);
+            _eventStore.Delete(id);
         }
 
         [HttpPut("event/")]
-        public void Put([FromBody] TDEvent value)
+        public void Put([Required, FromBody] Event value)
         {
-            _tdEventStore.Update(value);
+            _eventStore.Update(value);
         }
     }
 }

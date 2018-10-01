@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using CloudCall.Todo.DAL;
+using CloudCall.Todo.DAL.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -18,25 +20,17 @@ namespace simpleApp.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly IStore<TDList> _tdListStore;
+        private readonly IStore<Board> _boardStore;
 
-        public UsersController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IStore<TDList> tdListStore)
+        public UsersController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IStore<Board> boardStore)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _tdListStore = tdListStore;
+            _boardStore = boardStore;
         }
 
-        //// GET: api/Users
-        //[HttpGet]
-        //public IEnumerable<string> Get()
-        //{
-        //    return new string[] { "value1", "value2" };
-        //}
-
-        //todo:sdelat` OAuth
         [HttpGet("login",Name = "login")]
-        public async Task<SignInResult> Login(string email, string  password)
+        public async Task<SignInResult> Login([Required, EmailAddress] string email, [Required, DataType(DataType.Password)] string password)
         {
             if (ModelState.IsValid)
             {
@@ -50,7 +44,7 @@ namespace simpleApp.Controllers
         }
 
         [HttpPost("register", Name = "register")]
-        public async Task<IdentityResult> Register(string email, string password)
+        public async Task<IdentityResult> Register([Required, EmailAddress] string email, [Required, DataType(DataType.Password)] string password)
         {
             if (ModelState.IsValid)
             {
@@ -71,28 +65,10 @@ namespace simpleApp.Controllers
 
         [Authorize]
         [HttpGet("lists", Name = "getlists")]
-        public IEnumerable<TDList> Get()
+        public IEnumerable<Board> GetLists()
         {
-            return _tdListStore.GetListByUserId(int.Parse(_userManager.GetUserId(User)));
+            return _boardStore.GetList(int.Parse(_userManager.GetUserId(User)));
         }
-
-        //// POST: api/Users
-        //[HttpPost]
-        //public void Post([FromBody] string value)
-        //{
-        //}
-
-        //// PUT: api/Users/5
-        //[HttpPut("{id}")]
-        //public void Put(int id, [FromBody] string value)
-        //{
-        //}
-
-        //// DELETE: api/ApiWithActions/5
-        //[HttpDelete("{id}")]
-        //public void Delete(int id)
-        //{
-        //}
 
     }
 }

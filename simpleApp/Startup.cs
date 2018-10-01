@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using CloudCall.Todo.DAL;
+using CloudCall.Todo.DAL.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using CloudCall.Todo.Services;
 using CloudCall.Todo.Services.Stores;
+using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Swagger;
 
 
@@ -32,8 +34,11 @@ namespace simpleApp
 
             services.AddTransient<IRoleStore<ApplicationRole>, RoleStore>();
             services.AddTransient<IUserStore<ApplicationUser>, UserStore>();
-            services.AddScoped<IStore<TDList>, TDListStore>();
-            services.AddScoped<IStore<TDEvent>, TDEventStore>();
+            services.AddScoped<IStore<List>, ListStore>();
+            services.AddScoped<IStore<Event>, EventStore>();
+            services.AddScoped<IStore<Board>, BoardStore>();
+
+            services.AddCors();
 
             services.AddIdentity<ApplicationUser, ApplicationRole>()
                 .AddDefaultTokenProviders();
@@ -80,6 +85,8 @@ namespace simpleApp
             }
 
             app.UseAuthentication();
+
+            app.UseCors();
 
             app.UseSwagger();
 

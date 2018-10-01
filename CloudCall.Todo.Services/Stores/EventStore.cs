@@ -10,29 +10,30 @@ using Microsoft.Extensions.Configuration;
 
 namespace CloudCall.Todo.Services.Stores
 {
-    public class TDEventStore : IStore<TDEvent>
+    public class EventStore : IStore<Event>
     {
         private readonly string _connectionString;
 
-        public TDEventStore(IConfiguration configuration)
+        public EventStore(IConfiguration configuration)
         {
             _connectionString = configuration.GetConnectionString("DefaultConnection");
         }
 
-        public void Add(TDEvent entity, int listId)
+        public void Add(Event entity, int listId)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
+                entity.ListId = listId;
                 int idEvent = connection.Insert(entity).Value;
-                connection.Insert(new TDListTDEvent {TDEventId = idEvent, TDListId = listId});
+                connection.Insert(new ListEvent {EventId = idEvent, ListId = listId});
             }
         }
 
-        public TDEvent Get(int id)
+        public Event Get(int id)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
-                return connection.Get<TDEvent>(id);
+                return connection.Get<Event>(id);
             }
         }
 
@@ -40,12 +41,12 @@ namespace CloudCall.Todo.Services.Stores
         {
             using (var connection = new SqlConnection(_connectionString))
             {
-                connection.DeleteList<TDListTDEvent>(new {TDEventId = id});
-                connection.Delete<TDEvent>(id);
+                connection.DeleteList<ListEvent>(new {EventId = id});
+                connection.Delete<Event>(id);
             }
         }
 
-        public void Update(TDEvent entity)
+        public void Update(Event entity)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -54,23 +55,24 @@ namespace CloudCall.Todo.Services.Stores
 
         }
 
-        public IEnumerable<TDEvent> GetListByUserId(int id)
+        public IEnumerable<Event> GetList(int listId)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
-                var resultList = new List<TDEvent>();
-                var listLinksApplicationUser = connection.GetList<ApplicationUserTDList>(new { ApplicationUserId = id });
-                foreach (var link in listLinksApplicationUser)
+                var resultList = new List<Event>();
+                var eventLinksList = connection.GetList<ListEvent>(new { ListId = listId });
+                foreach (var _event in eventLinksList)
                 {
-                    var eventLinksList = connection.GetList<TDListTDEvent>(new {TDListId = link.TDListId});
-                    foreach (var tdEvent in eventLinksList)
-                    {
-                        resultList.Add(connection.Get<TDEvent>(tdEvent.TDEventId));
-                    }
+                    resultList.Add(connection.Get<Event>(_event.EventId));
                 }
 
                 return resultList;
             }
+        }
+
+        public IEnumerable<Event> GetFullList(int userId)
+        {
+           throw new NotImplementedException();
         }
     }
 }

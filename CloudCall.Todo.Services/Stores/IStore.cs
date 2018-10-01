@@ -11,6 +11,7 @@ namespace CloudCall.Todo.Services
         T Get(int id);
         void Delete(int id);
         void Update(T entity);
-        IEnumerable<T> GetListByUserId(int id);
+        IEnumerable<T> GetList(int id);
+        IEnumerable<T> GetFullList(int id);
     }
 }
