@@ -24,56 +24,91 @@ namespace CloudCall.Todo.Services.Stores
 
         public int Add(Board entity, int userId)
         {
-            using (var connection = new SqlConnection(_connectionString))
+            try
             {
-                int boardId = connection.Insert(entity).Value;
-                return connection.Insert(new ApplicationUserBoard {BoardId = boardId, ApplicationUserId = userId}).Value;
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    int boardId = connection.Insert(entity).Value;
+                    return connection.Insert(new ApplicationUserBoard {BoardId = boardId, ApplicationUserId = userId}).Value;
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Board Add error");
+                throw;
             }
         }
 
         public Board Get(int id)
         {
-            using (var connection = new SqlConnection(_connectionString))
+            try
             {
-                return connection.Get<Board>(id);
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    return connection.Get<Board>(id);
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Board Get error");
+                throw;
             }
         }
 
         public void Delete(int id)
         {
-            using (var connection = new SqlConnection(_connectionString))
+            try
             {
-                connection.Delete(id);
-                connection.DeleteList<ApplicationUserBoard>(new { BoardId = id});
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    connection.Delete(id);
+                    connection.DeleteList<ApplicationUserBoard>(new { BoardId = id});
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Board Delete error");
+                throw;
             }
         }
 
         public void Update(Board entity)
         {
-            using (var connection = new SqlConnection(_connectionString))
+            try
             {
-                connection.Update(entity);
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    connection.Update(entity);
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Board Update error");
+                throw;
             }
         }
 
         public IEnumerable<Board> GetList(int userId)
         {
-            using (var connection = new SqlConnection(_connectionString))
+            try
             {
-                var resultList = new List<Board>();
-                var linksApplicationUserBoards = connection.GetList<ApplicationUserBoard>(new {ApplicationUserId = userId});
-                foreach (var linksApplicationUserBoard in linksApplicationUserBoards)
+                using (var connection = new SqlConnection(_connectionString))
                 {
-                    resultList.Add(connection.Get<Board>(linksApplicationUserBoard.BoardId));
+                    var resultList = new List<Board>();
+                    var linksApplicationUserBoards = connection.GetList<ApplicationUserBoard>(new {ApplicationUserId = userId});
+                    foreach (var linksApplicationUserBoard in linksApplicationUserBoards)
+                    {
+                        resultList.Add(connection.Get<Board>(linksApplicationUserBoard.BoardId));
+                    }
+
+                    return resultList;
                 }
-
-                return resultList;
             }
-        }
-
-        public IEnumerable<Board> GetFullList(int id)
-        {
-            throw new NotImplementedException();
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Board GetList error");
+                throw;
+            }
         }
     }
 }

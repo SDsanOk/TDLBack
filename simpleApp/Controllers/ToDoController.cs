@@ -85,7 +85,7 @@ namespace simpleApp.Controllers
         [HttpGet("list/{boardId}")]
         public IEnumerable<List> GetListList([Required] int boardId)
         {
-            return _listStore.GetFullList(boardId);
+            return _listStore.GetList(boardId);
         }
 
         // POST: api/todo/list

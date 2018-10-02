@@ -66,8 +66,8 @@ namespace simpleApp.Controllers
         }
 
         [Authorize]
-        [HttpGet("lists", Name = "getlists")]
-        public IEnumerable<Board> GetLists()
+        [HttpGet("boards", Name = "getboards")]
+        public IEnumerable<Board> GetBoards()
         {
             return _boardStore.GetList(int.Parse(_userManager.GetUserId(User)));
         }

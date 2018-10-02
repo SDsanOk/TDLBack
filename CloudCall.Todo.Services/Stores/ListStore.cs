@@ -37,7 +37,7 @@ namespace CloudCall.Todo.Services
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "List Add error:");
+                _logger.LogError(e, "List Add error");
                 throw;
             }
         }
@@ -61,7 +61,7 @@ namespace CloudCall.Todo.Services
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "TODO List Get error:");
+                _logger.LogError(e, "List Get error");
                 throw;
             }
         }
@@ -89,44 +89,54 @@ namespace CloudCall.Todo.Services
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "TODO List Delete error:");
+                _logger.LogError(e, "List Delete error");
                 throw;
             }
         }
 
         public void Update(List entity)
         {
-            using (var connection = new SqlConnection(_connectionString))
+            try
             {
-                connection.Update(entity);
-            }
-        }
-
-        public IEnumerable<List> GetList(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<List> GetFullList(int boardId)
-        {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                var resultList = new List<List>();
-                var linksBoardList = connection.GetList<BoardList>(new {BoardId = boardId});
-                foreach (var boardList in linksBoardList)
+                using (var connection = new SqlConnection(_connectionString))
                 {
-                    var tempList = connection.Get<List>(boardList.ListId);
-                    var linksListEvents = connection.GetList<ListEvent>(new {ListId = boardList.ListId});
-                    foreach (var listEvent in linksListEvents)
-                    {
-                        tempList.Todo.Add(connection.Get<Event>(listEvent.EventId));
-                    }
-                    resultList.Add(tempList);
+                    connection.Update(entity);
                 }
-
-                return resultList;
             }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "List Update error");
+                throw;
+            }
+        }
 
+        public IEnumerable<List> GetList(int boardId)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    var resultList = new List<List>();
+                    var linksBoardList = connection.GetList<BoardList>(new { BoardId = boardId });
+                    foreach (var boardList in linksBoardList)
+                    {
+                        var tempList = connection.Get<List>(boardList.ListId);
+                        var linksListEvents = connection.GetList<ListEvent>(new { ListId = boardList.ListId });
+                        foreach (var listEvent in linksListEvents)
+                        {
+                            tempList.Todo.Add(connection.Get<Event>(listEvent.EventId));
+                        }
+                        resultList.Add(tempList);
+                    }
+
+                    return resultList;
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "List GetList error");
+                throw;
+            }
         }
     }
 }

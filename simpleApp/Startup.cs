@@ -55,25 +55,7 @@ namespace simpleApp
 
             services.AddAuthentication();
 
-            services.ConfigureApplicationCookie(options => options.LoginPath = "/swagger");
-
-            //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            //    .AddJwtBearer(options =>
-            //    {
-            //        options.RequireHttpsMetadata = false;
-            //        options.TokenValidationParameters = new TokenValidationParameters
-            //        {
-            //            ValidateIssuer = true,
-            //            ValidIssuer = "Al Panam",
-
-            //            ValidateAudience = true,
-            //            ValidAudience = "Common User",
-            //            ValidateLifetime = true,
-
-            //            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("salttestbearerJWTTokensbla-bla-bla")),
-            //            ValidateIssuerSigningKey = true,
-            //        };
-            //    });
+            services.ConfigureApplicationCookie(options => options.LoginPath = "/error");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
