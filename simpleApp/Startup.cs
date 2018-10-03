@@ -30,6 +30,8 @@ namespace simpleApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options => options.AddPolicy("all", builder => builder.WithHeaders("todo-task-header").WithOrigins("localhost:9080").AllowAnyMethod()));
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddTransient<IRoleStore<ApplicationRole>, RoleStore>();
@@ -37,13 +39,6 @@ namespace simpleApp
             services.AddScoped<IStore<List>, ListStore>();
             services.AddScoped<IStore<Event>, EventStore>();
             services.AddScoped<IStore<Board>, BoardStore>();
-
-            services.AddCors(options => options.AddPolicy("all", builder =>
-            {
-                builder.AllowAnyOrigin();
-                builder.AllowAnyMethod();
-                builder.WithHeaders("Todo-Task-Header");
-            }));
 
             services.AddIdentity<ApplicationUser, ApplicationRole>()
                 .AddDefaultTokenProviders();
@@ -55,7 +50,7 @@ namespace simpleApp
 
             services.AddAuthentication();
 
-            services.ConfigureApplicationCookie(options => options.LoginPath = "/error");
+            services.ConfigureApplicationCookie(options => options.LoginPath = "/error/unauthorized");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -64,6 +59,7 @@ namespace simpleApp
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+
             }
             else
             {
@@ -73,7 +69,7 @@ namespace simpleApp
 
             app.UseAuthentication();
 
-            app.UseCors();
+            //app.UseCors();
 
             app.UseSwagger();
 

@@ -14,23 +14,22 @@ using Microsoft.Extensions.Configuration;
 using CloudCall.Todo.Services;
 using Microsoft.AspNetCore.Cors;
 
+
 namespace simpleApp.Controllers
 {
+    [EnableCors("all")]
     [Route("api/todo")]
     [Authorize]
     [ApiController]
-    [EnableCors("all")]
     public class ToDoController : ControllerBase
     {
-        private readonly string _connectionString;
         private readonly IStore<List> _listStore;
         private readonly IStore<Event> _eventStore;
         private readonly IStore<Board> _boardStore;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public ToDoController(IConfiguration configuration, IStore<List> listStore, UserManager<ApplicationUser> userManager, IStore<Event> eventStore, IStore<Board> boardStore)
+        public ToDoController(IStore<List> listStore, UserManager<ApplicationUser> userManager, IStore<Event> eventStore, IStore<Board> boardStore)
         {
-            _connectionString = configuration.GetConnectionString("DefaultConnection");
             _listStore = listStore;
             _eventStore = eventStore;
             _boardStore = boardStore;
@@ -43,13 +42,6 @@ namespace simpleApp.Controllers
         public Board GetBoard([Required] int boardId)
         {
             return _boardStore.Get(boardId);
-        }
-
-        // GET: api/todo/board/
-        [HttpGet("boards/")]
-        public IEnumerable<Board> GetBoardList()
-        {
-            return _boardStore.GetList(int.Parse(_userManager.GetUserId(User)));
         }
 
         // POST: api/todo/board

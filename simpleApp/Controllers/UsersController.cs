@@ -15,9 +15,9 @@ using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace simpleApp.Controllers
 {
+    [EnableCors("all")]
     [Route("api/users")]
     [ApiController]
-    [EnableCors("all")]
     public class UsersController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -31,7 +31,7 @@ namespace simpleApp.Controllers
             _boardStore = boardStore;
         }
 
-        [HttpGet("login",Name = "login")]
+        [HttpPost("login",Name = "login")]
         public async Task<SignInResult> Login([Required, EmailAddress] string email, [Required, DataType(DataType.Password)] string password)
         {
             if (ModelState.IsValid)
@@ -58,7 +58,7 @@ namespace simpleApp.Controllers
                 return null;
         }
 
-        [HttpGet("logout", Name = "logout")]
+        [HttpPost("logout", Name = "logout")]
         public async Task<IdentityResult> LogOut()
         {
             await _signInManager.SignOutAsync();

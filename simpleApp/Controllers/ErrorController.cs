@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace simpleApp.Controllers
@@ -10,7 +11,12 @@ namespace simpleApp.Controllers
     {
         public IActionResult Index()
         {
-            return View();
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
+
+        public UnauthorizedResult unauthorized()
+        {
+            return Unauthorized();
         }
     }
 }
