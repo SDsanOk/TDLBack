@@ -16,6 +16,7 @@ using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 namespace simpleApp.Controllers
 {
     [EnableCors("all")]
+    //[DisableCors]
     [Route("api/users")]
     [ApiController]
     public class UsersController : ControllerBase
@@ -37,6 +38,7 @@ namespace simpleApp.Controllers
             if (ModelState.IsValid)
             {
                 var result = await _signInManager.PasswordSignInAsync(email, password, true, lockoutOnFailure: false);
+                var a = Response.Cookies;
                 return result;
             }
             else

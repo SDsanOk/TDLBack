@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using CloudCall.Todo.Services;
 using CloudCall.Todo.Services.Stores;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Swagger;
 
@@ -30,7 +31,12 @@ namespace simpleApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors(options => options.AddPolicy("all", builder => builder.WithHeaders("todo-task-header").WithOrigins("localhost:9080").AllowAnyMethod()));
+            services.AddSession(options =>
+            {
+                options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.None;
+            });
+
+            services.AddCors(options => options.AddPolicy("all", builder => builder.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod().AllowCredentials()));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
@@ -49,8 +55,12 @@ namespace simpleApp
             });
 
             services.AddAuthentication();
-
-            services.ConfigureApplicationCookie(options => options.LoginPath = "/error/unauthorized");
+            
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/error/unauthorized";
+                options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.None;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -72,6 +82,8 @@ namespace simpleApp
             //app.UseCors();
 
             app.UseSwagger();
+
+            app.UseCookiePolicy(new CookiePolicyOptions{Secure = CookieSecurePolicy.None, MinimumSameSitePolicy = SameSiteMode.None});
 
             app.UseSwaggerUI(c =>
             {
