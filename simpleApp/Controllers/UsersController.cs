@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using CloudCall.Todo.Services;
+using CloudCall.Todo.ViewModels;
 using Microsoft.AspNetCore.Cors;
 using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
@@ -33,12 +34,11 @@ namespace simpleApp.Controllers
         }
 
         [HttpPost("login",Name = "login")]
-        public async Task<SignInResult> Login([Required, EmailAddress] string email, [Required, DataType(DataType.Password)] string password)
+        public async Task<SignInResult> Login([FromBody] LoginViewModel loginViewModel)
         {
             if (ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(email, password, true, lockoutOnFailure: false);
-                var a = Response.Cookies;
+                var result = await _signInManager.PasswordSignInAsync(loginViewModel.Email, loginViewModel.Password, true, lockoutOnFailure: false);
                 return result;
             }
             else
@@ -48,12 +48,12 @@ namespace simpleApp.Controllers
         }
 
         [HttpPost("register", Name = "register")]
-        public async Task<IdentityResult> Register([Required, EmailAddress] string email, [Required, DataType(DataType.Password)] string password)
+        public async Task<IdentityResult> Register([FromBody] RegisterViewModel registerViewModel)
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser {UserName = email, Email = email};
-                var result = await _userManager.CreateAsync(user, password);
+                var user = new ApplicationUser {UserName = registerViewModel.Email, Email = registerViewModel.Email};
+                var result = await _userManager.CreateAsync(user, registerViewModel.Password);
                 return result;
             }
             else
@@ -61,10 +61,10 @@ namespace simpleApp.Controllers
         }
 
         [HttpPost("logout", Name = "logout")]
-        public async Task<IdentityResult> LogOut()
+        public async Task<IActionResult> LogOut()
         {
             await _signInManager.SignOutAsync();
-            return null;
+            return Ok();
         }
 
         [Authorize]

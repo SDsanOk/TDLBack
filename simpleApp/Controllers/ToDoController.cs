@@ -81,7 +81,7 @@ namespace simpleApp.Controllers
         }
 
         // POST: api/todo/list
-        [HttpPost("list/")]
+        [HttpPost("list/{boardId}")]
         public int Post(int boardId,[Required, FromBody] List value)
         {     
            return _listStore.Add(value, boardId);

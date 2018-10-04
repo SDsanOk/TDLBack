@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using CloudCall.Todo.Services;
 using CloudCall.Todo.Services.Stores;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Swagger;
@@ -54,12 +55,13 @@ namespace simpleApp
                 c.SwaggerDoc("v0.2", new Info { Title = "TODOListBackend", Version = "v0.2" });
             });
 
-            services.AddAuthentication();
-            
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme);
+
             services.ConfigureApplicationCookie(options =>
             {
                 options.LoginPath = "/error/unauthorized";
                 options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.None;
+                options.Cookie.Name = "Auth_Cookie";
             });
         }
 
@@ -79,7 +81,7 @@ namespace simpleApp
 
             app.UseAuthentication();
 
-            //app.UseCors();
+            app.UseCors();
 
             app.UseSwagger();
 

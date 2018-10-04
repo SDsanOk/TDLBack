@@ -40,8 +40,8 @@ namespace CloudCall.Todo.Services.Stores
         {
             using (var connection = new SqlConnection(_connectionString))
             {
-                connection.Delete(id);
-                connection.DeleteList<ApplicationUserBoard>(new {BoardId = id});
+                connection.DeleteList<ApplicationUserBoard>(new { BoardId = id });
+                connection.Delete<Board>(id);
             }
         }
 
@@ -49,7 +49,7 @@ namespace CloudCall.Todo.Services.Stores
         {
             using (var connection = new SqlConnection(_connectionString))
             {
-                connection.Update(entity);
+                connection.Update<Board>(entity);
             }
         }
 
