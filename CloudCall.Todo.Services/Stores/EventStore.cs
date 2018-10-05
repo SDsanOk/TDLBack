@@ -25,7 +25,8 @@ namespace CloudCall.Todo.Services.Stores
             {
                 entity.ListId = listId;
                 int idEvent = connection.Insert(entity).Value;
-                return connection.Insert(new ListEvent {EventId = idEvent, ListId = listId}).Value;
+                connection.Insert(new ListEvent {EventId = idEvent, ListId = listId});
+                return idEvent;
             }
         }
 

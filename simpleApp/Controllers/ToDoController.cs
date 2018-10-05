@@ -121,7 +121,7 @@ namespace simpleApp.Controllers
         }
 
         [HttpPut("event/")]
-        public void Put([Required, FromBody] Event value)
+        public void PutEvent([Required, FromBody] Event value)
         {
             _eventStore.Update(value);
         }

@@ -17,7 +17,6 @@ using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 namespace simpleApp.Controllers
 {
     [EnableCors("all")]
-    //[DisableCors]
     [Route("api/users")]
     [ApiController]
     public class UsersController : ControllerBase

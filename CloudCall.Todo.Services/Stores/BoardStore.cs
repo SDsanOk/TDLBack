@@ -24,7 +24,8 @@ namespace CloudCall.Todo.Services.Stores
             using (var connection = new SqlConnection(_connectionString))
             {
                 int boardId = connection.Insert(entity).Value;
-                return connection.Insert(new ApplicationUserBoard {BoardId = boardId, ApplicationUserId = userId}).Value;
+                connection.Insert(new ApplicationUserBoard {BoardId = boardId, ApplicationUserId = userId});
+                return boardId;
             }
         }
 
@@ -41,6 +42,18 @@ namespace CloudCall.Todo.Services.Stores
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.DeleteList<ApplicationUserBoard>(new { BoardId = id });
+                var linksBoardLists = connection.GetList<BoardList>(new {BoardId = id});
+                connection.DeleteList<BoardList>(new { BoardId = id });
+                foreach (var boardList in linksBoardLists)
+                {
+                    var linksListsEvents = connection.GetList<ListEvent>(new {ListId = boardList.ListId});
+                    connection.DeleteList<ListEvent>(new { ListId = boardList.ListId });
+                    connection.Delete<List>(boardList.ListId);
+                    foreach (var listEvent in linksListsEvents)
+                    {
+                        connection.Delete<Event>(listEvent.EventId);
+                    }
+                }
                 connection.Delete<Board>(id);
             }
         }

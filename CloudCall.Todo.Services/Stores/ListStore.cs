@@ -27,7 +27,8 @@ namespace CloudCall.Todo.Services
             {
                 entity.BoardId = boardId;
                 int listId = connection.Insert(entity).Value;
-                return connection.Insert(new BoardList {BoardId = boardId, ListId = listId}).Value;
+                connection.Insert(new BoardList {BoardId = boardId, ListId = listId});
+                return listId;
             }
         }
 
