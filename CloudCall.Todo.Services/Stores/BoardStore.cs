@@ -23,8 +23,8 @@ namespace CloudCall.Todo.Services.Stores
         {
             using (var connection = new SqlConnection(_connectionString))
             {
+                entity.UserId = userId;
                 int boardId = connection.Insert(entity).Value;
-                connection.Insert(new ApplicationUserBoard {BoardId = boardId, ApplicationUserId = userId});
                 return boardId;
             }
         }
@@ -41,20 +41,13 @@ namespace CloudCall.Todo.Services.Stores
         {
             using (var connection = new SqlConnection(_connectionString))
             {
-                connection.DeleteList<ApplicationUserBoard>(new { BoardId = id });
-                var linksBoardLists = connection.GetList<BoardList>(new {BoardId = id});
-                connection.DeleteList<BoardList>(new { BoardId = id });
-                foreach (var boardList in linksBoardLists)
+                var linksLists = connection.GetList<List>(new { BoardId = id });
+                foreach (var linksList in linksLists)
                 {
-                    var linksListsEvents = connection.GetList<ListEvent>(new {ListId = boardList.ListId});
-                    connection.DeleteList<ListEvent>(new { ListId = boardList.ListId });
-                    connection.Delete<List>(boardList.ListId);
-                    foreach (var listEvent in linksListsEvents)
-                    {
-                        connection.Delete<Event>(listEvent.EventId);
-                    }
+                    connection.DeleteList<Event>(new { ListId = linksList.Id });
                 }
-                connection.Delete<Board>(id);
+                connection.DeleteList<List>(new {BoardId = id});
+                connection.DeleteList<Board>(new {Id = id});
             }
         }
 
@@ -70,15 +63,7 @@ namespace CloudCall.Todo.Services.Stores
         {
             using (var connection = new SqlConnection(_connectionString))
             {
-                var resultList = new List<Board>();
-                var linksApplicationUserBoards =
-                    connection.GetList<ApplicationUserBoard>(new {ApplicationUserId = userId});
-                foreach (var linksApplicationUserBoard in linksApplicationUserBoards)
-                {
-                    resultList.Add(connection.Get<Board>(linksApplicationUserBoard.BoardId));
-                }
-
-                return resultList;
+                return connection.GetList<Board>(new {UserId = userId});
             }
         }
     }

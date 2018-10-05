@@ -25,7 +25,6 @@ namespace CloudCall.Todo.Services.Stores
             {
                 entity.ListId = listId;
                 int idEvent = connection.Insert(entity).Value;
-                connection.Insert(new ListEvent {EventId = idEvent, ListId = listId});
                 return idEvent;
             }
         }
@@ -42,7 +41,6 @@ namespace CloudCall.Todo.Services.Stores
         {
             using (var connection = new SqlConnection(_connectionString))
             {
-                connection.DeleteList<ListEvent>(new {EventId = id});
                 connection.Delete<Event>(id);
             }
         }
@@ -59,14 +57,7 @@ namespace CloudCall.Todo.Services.Stores
         {
             using (var connection = new SqlConnection(_connectionString))
             {
-                var resultList = new List<Event>();
-                var eventLinksList = connection.GetList<ListEvent>(new {ListId = listId});
-                foreach (var _event in eventLinksList)
-                {
-                    resultList.Add(connection.Get<Event>(_event.EventId));
-                }
-
-                return resultList;
+                return connection.GetList<Event>(new {ListId = listId});
             }
         }
     }

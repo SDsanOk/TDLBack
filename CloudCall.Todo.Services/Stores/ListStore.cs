@@ -27,7 +27,6 @@ namespace CloudCall.Todo.Services
             {
                 entity.BoardId = boardId;
                 int listId = connection.Insert(entity).Value;
-                connection.Insert(new BoardList {BoardId = boardId, ListId = listId});
                 return listId;
             }
         }
@@ -37,11 +36,7 @@ namespace CloudCall.Todo.Services
             using (var connection = new SqlConnection(_connectionString))
             {
                 var result = connection.Get<List>(id);
-                var linksListEvents = connection.GetList<ListEvent>(new {ListId = id});
-                foreach (var listEvent in linksListEvents)
-                {
-                    result.Todo.Add(connection.Get<Event>(listEvent.EventId));
-                }
+                result.Todo = connection.GetList<Event>(new {ListId = id}).ToList();
 
                 return result;
             }
@@ -51,19 +46,8 @@ namespace CloudCall.Todo.Services
         {
             using (var connection = new SqlConnection(_connectionString))
             {
-                var linkBoardLists = connection.GetList<BoardList>(new {ListId = id});
-                var linkListEvents = connection.GetList<ListEvent>(new {ListId = id});
-                connection.DeleteList<BoardList>(new {ListId = id});
-                connection.DeleteList<ListEvent>(new {ListId = id});
-                foreach (var boardList in linkBoardLists)
-                {
-                    connection.Delete<List>(boardList.ListId);
-                }
-
-                foreach (var listEvent in linkListEvents)
-                {
-                    connection.Delete<Event>(listEvent.EventId);
-                }
+                connection.DeleteList<Event>(new {ListId = id});
+                connection.DeleteList<List>(new {Id = id});
             }
         }
 
@@ -79,18 +63,12 @@ namespace CloudCall.Todo.Services
         {
             using (var connection = new SqlConnection(_connectionString))
             {
-                var resultList = new List<List>();
-                var linksBoardList = connection.GetList<BoardList>(new {BoardId = boardId});
-                foreach (var boardList in linksBoardList)
-                {
-                    var tempList = connection.Get<List>(boardList.ListId);
-                    var linksListEvents = connection.GetList<ListEvent>(new {ListId = boardList.ListId});
-                    foreach (var listEvent in linksListEvents)
-                    {
-                        tempList.Todo.Add(connection.Get<Event>(listEvent.EventId));
-                    }
 
-                    resultList.Add(tempList);
+                var resultList = new List<List>();
+                resultList = connection.GetList<List>(new {BoardId = boardId}).ToList();
+                foreach (var list in resultList)
+                {
+                    list.Todo = connection.GetList<Event>(new {ListId = list.Id}).ToList();
                 }
 
                 return resultList;
