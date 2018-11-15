@@ -13,6 +13,7 @@ using Microsoft.IdentityModel.Tokens;
 using CloudCall.Todo.Services;
 using CloudCall.Todo.Services.Stores;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Swagger;
@@ -46,6 +47,7 @@ namespace simpleApp
             services.AddScoped<IStore<List>, ListStore>();
             services.AddScoped<IStore<Event>, EventStore>();
             services.AddScoped<IStore<Board>, BoardStore>();
+
 
             services.AddIdentity<ApplicationUser, ApplicationRole>()
                 .AddDefaultTokenProviders();

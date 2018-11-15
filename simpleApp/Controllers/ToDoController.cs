@@ -67,14 +67,14 @@ namespace simpleApp.Controllers
 
         //lists
         // GET: api/todo/list/5
-        [HttpGet("list/{listId}")]
-        public List Get([Required] int listId)
-        {
-            return _listStore.Get(listId);
-        }
+        //[HttpGet("list/{listId}", Name = "GetListById")]
+        //public List Get([Required] int listId)
+        //{
+        //    return _listStore.Get(listId);
+        //}
 
         // GET: api/todo/list/5
-        [HttpGet("list/{boardId}")]
+        [HttpGet("list/{boardId}", Name = "GetListByBoard")]
         public IEnumerable<List> GetListList([Required] int boardId)
         {
             return _listStore.GetList(boardId);
