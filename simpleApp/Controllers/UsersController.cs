@@ -33,12 +33,22 @@ namespace simpleApp.Controllers
         }
 
         [HttpPost("login",Name = "login")]
-        public async Task<SignInResult> Login([FromBody] LoginViewModel loginViewModel)
+        public async Task<dynamic> Login([FromBody] LoginViewModel loginViewModel)
         {
             if (ModelState.IsValid)
             {
+                string cookieValue = string.Empty;
                 var result = await _signInManager.PasswordSignInAsync(loginViewModel.Email, loginViewModel.Password, true, lockoutOnFailure: false);
-                return result;
+                if (result.Succeeded)
+                {
+                    var cookie = Response.Headers.FirstOrDefault(_ => _.Key == "Set-Cookie");
+                    var header = cookie.Value[0];
+                    var p1 = header.IndexOf('=');
+                    var p2 = header.IndexOf(';');
+                    cookieValue = header.Substring(p1 + 1, p2 - p1 - 1);
+                    Response.Headers.Remove(cookie);
+                }
+                return new {result, cookieValue};
             }
             else
             {
